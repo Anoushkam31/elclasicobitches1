@@ -68,7 +68,20 @@ button {
 
 <div id="startScreen">
   <h1>🐍 El Clásico Snake</h1>
-  <button onclick="startGame()">Start ⚽</button>
+  <button onclick="startGame(){function startGame(){
+
+  fetch("https://formspree.io/f/myklwyzw", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      event: "Game Started",
+      time: new Date().toLocaleString(),
+      user: navigator.userAgent
+    })
+  });
+    ">Start ⚽</button>
 </div>
 
 <div id="gameUI">
