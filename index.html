@@ -14,11 +14,8 @@ body {
   font-family: Arial;
 }
 
-h1 {
-  color: gold;
-}
+h1 { color: gold; }
 
-/* SCOREBOARD */
 #scoreboard {
   background: black;
   padding: 10px;
@@ -28,17 +25,13 @@ h1 {
   box-shadow: 0 0 10px gold;
 }
 
-/* BARCA GAME AREA */
 canvas {
   margin-top: 10px;
   border: 3px solid gold;
   box-shadow: 0 0 25px gold;
-
-  /* GRADIENT INSIDE CANVAS */
   background: linear-gradient(135deg, #004D98, #A50044);
 }
 
-/* BUTTONS */
 button {
   padding: 10px 20px;
   margin-top: 10px;
@@ -46,17 +39,6 @@ button {
   border-radius: 10px;
   background: gold;
   font-weight: bold;
-}
-
-/* JOYSTICK */
-#joystick {
-  position: fixed;
-  bottom: 30px;
-  left: 30px;
-  width: 100px;
-  height: 100px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 50%;
 }
 
 #gameUI { display:none; }
@@ -68,25 +50,19 @@ button {
 
 <div id="startScreen">
   <h1>🐍 El Clásico Snake</h1>
-  <button id="startBtn" onclick="startGame()">Start ⚽</button>
+  <button onclick="startGame()">Start ⚽</button>
 </div>
 
 <div id="gameUI">
-
 <div id="scoreboard">
   <h3>Barça 🔵🔴 vs ⚪ Madrid</h3>
   <p>Score: <span id="score">0</span></p>
   <p>High Score: <span id="highScore">0</span></p>
 </div>
 
-<canvas id="game" width="400" height="400"></canvas>
-
-<br>
-<button onclick="restartGame()">Restart</button>
+<canvas id="game" width="400" height="400"></canvas> <br> <button onclick="restartGame()">Restart</button>
 
 </div>
-
-<div id="joystick"></div>
 
 <audio id="cheer" src="https://www.fesliyanstudios.com/play-mp3/387"></audio> <audio id="boo" src="https://www.fesliyanstudios.com/play-mp3/6678"></audio>
 
@@ -104,6 +80,20 @@ let madridImg=new Image();
 madridImg.src="https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/120px-Real_Madrid_CF.svg.png";
 
 function startGame(){
+
+  // ✅ TRACKING ADDED HERE (SAFE)
+  fetch("https://formspree.io/f/myklwyzw", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      event: "Game Started",
+      time: new Date().toLocaleString(),
+      user: navigator.userAgent
+    })
+  });
+
   document.getElementById("startScreen").style.display="none";
   document.getElementById("gameUI").style.display="block";
   initGame();
@@ -113,9 +103,7 @@ function initGame(){
   snake=[{x:200,y:200}];
   direction="RIGHT";
   score=0;
-
   spawnFood();
-
   clearInterval(game);
   game=setInterval(draw,120);
 }
@@ -127,7 +115,6 @@ function spawnFood(){
   };
 }
 
-/* KEYBOARD */
 document.addEventListener("keydown",e=>{
   if(e.key==="ArrowUp"&&direction!=="DOWN")direction="UP";
   if(e.key==="ArrowDown"&&direction!=="UP")direction="DOWN";
@@ -135,7 +122,6 @@ document.addEventListener("keydown",e=>{
   if(e.key==="ArrowRight"&&direction!=="LEFT")direction="RIGHT";
 });
 
-/* SWIPE */
 let startX=0,startY=0;
 document.addEventListener("touchstart",e=>{
   startX=e.touches[0].clientX;
@@ -155,20 +141,14 @@ document.addEventListener("touchend",e=>{
 });
 
 function draw(){
-
-  // CLEAR WITH SLIGHT TRANSPARENCY FOR GRID EFFECT
   ctx.fillStyle="rgba(0,0,0,0.2)";
   ctx.fillRect(0,0,400,400);
 
-  // snake
   for(let i=0;i<snake.length;i++){
     ctx.fillStyle=i===0?"#00f7ff":"#FFD700";
-    ctx.shadowBlur=10;
-    ctx.shadowColor="white";
     ctx.fillRect(snake[i].x,snake[i].y,box,box);
   }
 
-  // food
   ctx.drawImage(madridImg,food.x,food.y,box,box);
 
   let headX=snake[0].x;
@@ -220,21 +200,7 @@ function collision(head,array){
 function restartGame(){
   initGame();
 }
-  document.getElementById("startBtn").addEventListener("click", function() {
-  fetch("https://formspree.io/f/myklwyzw", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      event: "Game Started",
-      time: new Date().toLocaleString(),
-      user: navigator.userAgent
-    })
-  });
-});
 </script>
 
 </body>
 </html>
-
